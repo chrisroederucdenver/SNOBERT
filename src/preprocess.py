@@ -70,10 +70,15 @@ if __name__ == "__main__":
         STATIC_DICT_PATH = ROOT_DIR / "preprocess_data" / "most_common_concept.pkl"
 
     SPLIT_PATH = ROOT_DIR / "preprocess_data" / "splits"
+    #SNOMED_GRAPH_RF2_DIR = (
+    #    ROOT_DIR
+    #    / "competition_data"
+    #    / "SnomedCT_InternationalRF2_PRODUCTION_20230531T120000Z_Challenge_Edition"
+    #)
     SNOMED_GRAPH_RF2_DIR = (
         ROOT_DIR
         / "competition_data"
-        / "SnomedCT_InternationalRF2_PRODUCTION_20230531T120000Z_Challenge_Edition"
+        / "SnomedCT_InternationalRF2_PRODUCTION_20250801T120000Z"
     )
     SNOMED_GRAPH_RF2_SERIALIZED = ROOT_DIR / "competition_data" / "graph.gml"
 
@@ -142,7 +147,8 @@ if __name__ == "__main__":
         else:
             get_checkpoint(name, SECOND_STAGE_PATH / path)
 
-    cuda = True
+    #cuda = True
+    cuda = False
     embedders = [
         (SepBERTEmbedder(cuda), "sapbert", "sapbertmean"),
     ]

@@ -46,7 +46,8 @@ def timeSince(since, percent):
 def train_fn(L, epoch):
     L.model.train()
     device = L.device
-    scaler = torch.cuda.amp.GradScaler(enabled=L.cfg.apex)
+    ##scaler = torch.cuda.amp.GradScaler(enabled=L.cfg.apex)
+    scaler = torch.amp.GradScaler(enabled=L.cfg.apex)
     losses = AverageMeter()
     global_step = 0
 
@@ -57,7 +58,8 @@ def train_fn(L, epoch):
             inputs[k] = v.to(device)
         labels = labels.to(device)
         batch_size = labels.size(0)
-        with torch.cuda.amp.autocast(enabled=L.cfg.apex):
+        #with torch.cuda.amp.autocast(enabled=L.cfg.apex):
+        with torch.amp.autocast(device_type='mps', enabled=L.cfg.apex):
             y_preds = L.model(**inputs)
 
         b, c, n = y_preds.shape
@@ -110,7 +112,8 @@ def valid_fn(L, valid_loader):
         labels = labels.to(device)
         batch_size = labels.size(0)
 
-        with torch.no_grad(), torch.cuda.amp.autocast(enabled=L.cfg.apex):
+        ## with torch.no_grad(), torch.cuda.amp.autocast(enabled=L.cfg.apex):
+        with torch.no_grad(), torch.amp.autocast(device_type='mps', enabled=L.cfg.apex):
             y_preds = model(**inputs)
 
         b, c, n = y_preds.shape

@@ -81,7 +81,8 @@ def get_logger(output_dir):
 
 class Learner:
     def __init__(self, cfg, output_folder):
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        #self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.device = torch.device("mps" if torch.mps.is_available() else "cpu")
         self.cfg = cfg
         self.output_folder = output_folder
         self.logger = get_logger(output_folder)
@@ -208,7 +209,7 @@ class Learner:
 
 def parallel_init(cfg):
     cfg.IS_MASTER = cfg.PARALLEL.LOCAL_RANK == 0
-    torch.cuda.set_device(cfg.PARALLEL.LOCAL_RANK)
+    ##torch.cuda.set_device(cfg.PARALLEL.LOCAL_RANK)
     if cfg.PARALLEL.DDP:
         torch.distributed.init_process_group(backend="nccl", init_method="env://")
 
@@ -216,7 +217,7 @@ def parallel_init(cfg):
     torch.backends.cudnn.benchmark = cfg.torch.benchmark
     torch.backends.cudnn.deterministic = cfg.torch.deterministic
     torch.set_anomaly_enabled(cfg.torch.detect_anomaly)
-    torch.backends.cuda.matmul.allow_tf32 = True
+    ##torch.backends.cuda.matmul.allow_tf32 = True
 
 
 @hydra.main(config_path="../configs", config_name="snom", version_base=None)
